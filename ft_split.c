@@ -6,40 +6,31 @@
 /*   By: dmazo-ga <dmazo-ga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 22:23:18 by damian            #+#    #+#             */
-/*   Updated: 2024/11/01 12:49:13 by dmazo-ga         ###   ########.fr       */
+/*   Updated: 2024/11/01 14:32:30 by dmazo-ga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	int	ft_count_words(const char *s, char delim)
+static int	ft_count_words(const char *s, char delim)
 {
-	int	count;
-	int	i;
+	int count = 0;
 
-	count = 0;
-	i = 0;
-	while (s[i])
+	while (*s)
 	{
-		while (s[i] == delim)
-			i++;
-		if (s[i] != '\0')
-			count++;
-		while (s[i] && s[i] != delim)
-			i++;
+		while (*s == delim) s++;
+		if (*s != '\0') count++;
+		while (*s && *s != delim) s++;
 	}
 	return (count);
 }
 
 static char	*ft_strndup(const char *s, size_t n)
 {
-	char	*dup;
-	size_t	i;
-
-	dup = (char *)malloc(n + 1);
+	char *dup = (char *)malloc(n + 1);
 	if (!dup)
 		return (NULL);
-	i = 0;
+	size_t i = 0;
 	while (i < n && s[i])
 	{
 		dup[i] = s[i];
@@ -49,11 +40,21 @@ static char	*ft_strndup(const char *s, size_t n)
 	return (dup);
 }
 
+void	ft_free_split(char **result)
+{
+	int i = 0;
+	while (result[i])
+	{
+		free(result[i]);
+		i++;
+	}
+	free(result);
+}
+
 char	**ft_split(const char *s, char delim)
 {
 	char	**result;
-	int		words;
-	int		i[3];
+	int		words, i = 0, j = 0;
 
 	if (!s)
 		return (NULL);
@@ -61,37 +62,29 @@ char	**ft_split(const char *s, char delim)
 	result = (char **)malloc((words + 1) * sizeof(char *));
 	if (!result)
 		return (NULL);
-	i[0] = 0;
-	i[1] = 0;
-	while (s[i[0]])
+	while (s[i])
 	{
-		while (s[i[0]] == delim)
-			i[0]++;
-		i[2] = i[0];
-		while (s[i[0]] && s[i[0]] != delim)
-			i[0]++;
-		if (i[0] > i[2])
+		while (s[i] == delim) i++;
+		int start = i;
+		while (s[i] && s[i] != delim) i++;
+		if (i > start)
 		{
-			result[i[1]] = ft_strndup(s + i[2], i[0] - i[2]);
-			if (!result[i[1]])
+			result[j] = ft_strndup(s + start, i - start);
+			if (!result[j])
 			{
-				while (i[1] > 0)
-				{
-					free(result[--i[1]]);
-				}
-				free(result);
+				ft_free_split(result);
 				return (NULL);
 			}
-			i[1]++;
+			j++;
 		}
 	}
-	result[i[1]] = NULL;
+	result[j] = NULL;
 	return (result);
 }
 
 // int	main(void)
 // {
-// 	char	music [] = "Techno, Techouse, House";
+// 	char	music [] = "Techno,Techouse,House";
 // 	char	delim = ' ';
 // 	char	**split_return;
 // 	size_t	i;
@@ -103,5 +96,7 @@ char	**ft_split(const char *s, char delim)
 // 		printf("%s\n", split_return[i]);
 // 		i++;
 // 	}
+// 	ft_free_split(split_return);
+
 // 	return (0);
 // }

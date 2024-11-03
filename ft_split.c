@@ -3,100 +3,97 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmazo-ga <dmazo-ga@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/09 22:23:18 by damian            #+#    #+#             */
-/*   Updated: 2024/11/01 14:32:30 by dmazo-ga         ###   ########.fr       */
+/*   Created: 2024/11/02 10:52:41 by marvin            #+#    #+#             */
+/*   Updated: 2024/11/02 10:52:41 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_count_words(const char *s, char delim)
+static void	fill_subs(char **subs, char const *input, char sep)
 {
-	int count = 0;
+	char			**pos;
+	char const		*end;
 
-	while (*s)
+	pos = subs;
+	while (*input)
 	{
-		while (*s == delim) s++;
-		if (*s != '\0') count++;
-		while (*s && *s != delim) s++;
+		while (*input == sep)
+			++input;
+		if (*input == '\0')
+			break ;
+		end = input;
+		while (*end && *end != sep)
+			++end;
+		*pos = ft_substr(input, 0, end - input);
+		input = end;
+		++pos;
+	}
+	*pos = NULL;
+}
+
+static int	count_subs(char const *input, char sep)
+{
+	int	count;
+
+	count = 0;
+	while (*input)
+	{
+		while (*input == sep)
+			++input;
+		if (*input)
+			++count;
+		while (*input && *input != sep)
+			++input;
 	}
 	return (count);
 }
 
-static char	*ft_strndup(const char *s, size_t n)
+char	**split_str(char const *input, char sep)
 {
-	char *dup = (char *)malloc(n + 1);
-	if (!dup)
+	char	**subs_array;
+	int		count;
+
+	if (!input)
 		return (NULL);
-	size_t i = 0;
-	while (i < n && s[i])
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
+	count = count_subs(input, sep);
+	subs_array = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!subs_array)
+		return (NULL);
+	fill_subs(subs_array, input, sep);
+	return (subs_array);
 }
 
-void	ft_free_split(char **result)
+void	free_subs(char **subs)
 {
-	int i = 0;
-	while (result[i])
+	int	i;
+
+	i = 0;
+	if (subs)
 	{
-		free(result[i]);
-		i++;
+		while (subs[i])
+		{
+			free(subs[i]);
+			i++;
+		}
+		free(subs);
 	}
-	free(result);
 }
 
-char	**ft_split(const char *s, char delim)
+int	main(void)
 {
 	char	**result;
-	int		words, i = 0, j = 0;
+	int		i;
 
-	if (!s)
-		return (NULL);
-	words = ft_count_words(s, delim);
-	result = (char **)malloc((words + 1) * sizeof(char *));
-	if (!result)
-		return (NULL);
-	while (s[i])
+	result = split_str("Hello,I`m,Damian,splice", ',');
+	i = 0;
+	while (result && result[i])
 	{
-		while (s[i] == delim) i++;
-		int start = i;
-		while (s[i] && s[i] != delim) i++;
-		if (i > start)
-		{
-			result[j] = ft_strndup(s + start, i - start);
-			if (!result[j])
-			{
-				ft_free_split(result);
-				return (NULL);
-			}
-			j++;
-		}
+		printf("%s\n", result[i]);
+		i++;
 	}
-	result[j] = NULL;
-	return (result);
+	free_subs(result);
+	return (0);
 }
-
-// int	main(void)
-// {
-// 	char	music [] = "Techno,Techouse,House";
-// 	char	delim = ' ';
-// 	char	**split_return;
-// 	size_t	i;
-
-// 	split_return= ft_split(music, delim);
-// 	i = 0;
-// 	while (split_return[i] != NULL)
-// 	{
-// 		printf("%s\n", split_return[i]);
-// 		i++;
-// 	}
-// 	ft_free_split(split_return);
-
-// 	return (0);
-// }

@@ -12,47 +12,36 @@
 
 #include "libft.h"
 
-static int	ft_charchecker(const char c, const char *set)
+char	*ft_strtrim(char const *s1, char const *set)
 {
-	size_t	i;
+	char	*final_str;
+	size_t	start;
+	size_t	end;
 
-	i = 0;
-	while (set[i])
-	{
-		if (set[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
+	if (!s1)
+		return (NULL);
+	if (!set)
+		return (ft_strdup(s1));
+	end = ft_strlen(s1) - 1;
+	start = 0;
+	while (s1[start] && ft_strchr(set, s1[start]))
+		++start;
+	while (s1[end] && ft_strchr(set, s1[end]))
+		--end;
+	final_str = ft_substr(s1, start, end - start + 1);
+	return (final_str);
 }
 
-char	*ft_strtrim(const char *s1, const char *set)
-{
-	char	*str;
-	size_t	i;
-	size_t	n;	
-	size_t	k;
+// int	main(void)
+// {
+// 	char const	str1[] = "    I'm a fast learner    ";
+// 	char const	set[] = " ";
+// 	char *result;
 
-	if (!s1 || !set)
-		return (NULL);
-	n = 0;
-	while (s1[n] && ft_charchecker(s1[n], set))
-		n++;
-	k = ft_strlen(s1);
-	while (k > n && ft_charchecker(s1[k - 1], set))
-		k--;
-	str = (char *)malloc(sizeof(*s1) * (k - n + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (n < k)
-		str[i++] = s1[n++];
-	str[i] = 0;
-	return (str);
-}
-
-// int	main(void){
-// 	char const	str1[] = "    I'm fast learner   	";
-// 	char const result[] = "I'm";
-// 	printf("%s\n", ft_strtrim(str1, result));
+// 	result = ft_strtrim(str1, set);
+// 	if (result)
+// 	{
+// 		printf("Trimmed result: '%s'\n", result);
+// 	}
+// 	return (0);
 // }

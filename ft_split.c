@@ -62,9 +62,9 @@ static void	free_split(char **str_arr)
 char	**ft_split(const char *inp_str, char delimiter)
 {
 	char	**result;
-	int	word_count;
-	int	i;
-	int	j;
+	int		word_count;
+	int		i;
+	int		j;
 
 	word_count = count_words(inp_str, delimiter);
 	result = (char **) malloc(sizeof(char *) * (word_count + 1));
@@ -88,18 +88,18 @@ char	**ft_split(const char *inp_str, char delimiter)
 	return (result);
 }
 
-int	main(void)
-	{
-		char	**result;
-		int		i;
+// int	main(void)
+// 	{
+// 		char	**result;
+// 		int		i;
 
-		result = ft_split("Hello,I`m,Damian,splicE", ',');
-		i = 0;
-		while (result && result[i])
-		{
-			printf("%s\n", result[i]);
-			i++;
-		}
-		free_split(result);
-		return (0);
-	}
+// 		result = ft_split("Hello,I`m,Damian,splicE", ',');
+// 		i = 0;
+// 		while (result && result[i])
+// 		{
+// 			printf("%s\n", result[i]);
+// 			i++;
+// 		}
+// 		free_split(result);
+// 		return (0);
+// 	}

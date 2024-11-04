@@ -12,88 +12,94 @@
 
 #include "libft.h"
 
-static void	fill_subs(char **subs, char const *input, char sep)
+static int	my_delimiter(const char *str, char c, int index)
 {
-	char			**pos;
-	char const		*end;
+	while (str[index] && str[index] != c)
+		index++;
+	return (index);
+}
 
-	pos = subs;
-	while (*input)
+static int	get_word(const char *str, char c, int index)
+{
+	while (str[index] && str[index] == c)
+		index++;
+	return (index);
+}
+
+static int	count_words(const char *str, char delimiter)
+{
+	int	word_count;
+	int	i;
+
+	i = 0;
+	word_count = 0;
+	while (str[i])
 	{
-		while (*input == sep)
-			++input;
-		if (*input == '\0')
-			break ;
-		end = input;
-		while (*end && *end != sep)
-			++end;
-		*pos = ft_substr(input, 0, end - input);
-		input = end;
-		++pos;
+		if (str[i] != delimiter)
+		{
+			word_count++;
+			i = my_delimiter(str, delimiter, i);
+		}
+		else
+			i++;
 	}
-	*pos = NULL;
+	return (word_count);
 }
 
-static int	count_subs(char const *input, char sep)
-{
-	int	count;
-
-	count = 0;
-	while (*input)
-	{
-		while (*input == sep)
-			++input;
-		if (*input)
-			++count;
-		while (*input && *input != sep)
-			++input;
-	}
-	return (count);
-}
-
-char	**split_str(char const *input, char sep)
-{
-	char	**subs_array;
-	int		count;
-
-	if (!input)
-		return (NULL);
-	count = count_subs(input, sep);
-	subs_array = (char **)malloc(sizeof(char *) * (count + 1));
-	if (!subs_array)
-		return (NULL);
-	fill_subs(subs_array, input, sep);
-	return (subs_array);
-}
-
-void	free_subs(char **subs)
+static void	free_split(char **str_arr)
 {
 	int	i;
 
 	i = 0;
-	if (subs)
+	while (str_arr[i])
 	{
-		while (subs[i])
-		{
-			free(subs[i]);
-			i++;
-		}
-		free(subs);
+		free(str_arr[i]);
+		i++;
 	}
+	free(str_arr);
+}
+
+char	**ft_split(const char *inp_str, char delimiter)
+{
+	char	**result;
+	int	word_count;
+	int	i;
+	int	j;
+
+	word_count = count_words(inp_str, delimiter);
+	result = (char **) malloc(sizeof(char *) * (word_count + 1));
+	if (!inp_str || !result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (j < word_count)
+	{
+		i = get_word(inp_str, delimiter, i);
+		result[j] = ft_substr(inp_str, i, my_delimiter(inp_str, delimiter, i) - i);
+		if (!result[j])
+		{
+			free_split(result);
+			return (NULL);
+		}
+		i = my_delimiter(inp_str, delimiter, i);
+		j++;
+	}
+	result[j] = NULL;
+	return (result);
 }
 
 int	main(void)
-{
-	char	**result;
-	int		i;
-
-	result = split_str("Hello,I`m,Damian,splice", ',');
-	i = 0;
-	while (result && result[i])
 	{
-		printf("%s\n", result[i]);
-		i++;
+		char	**result;
+		int		i;
+
+		result = ft_split("Hello,I`m,Damian,splicE", ',');
+		i = 0;
+		while (result && result[i])
+		{
+			printf("%s\n", result[i]);
+			i++;
+		}
+		free_split(result);
+		return (0);
 	}
-	free_subs(result);
-	return (0);
-}

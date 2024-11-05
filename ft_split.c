@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dmazo-ga <dmazo-ga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 10:52:41 by marvin            #+#    #+#             */
-/*   Updated: 2024/11/02 10:52:41 by marvin           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:25:01 by dmazo-ga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,19 @@ char	**ft_split(const char *inp_str, char delimiter)
 	int		i;
 	int		j;
 
+	if (!inp_str)
+		return (NULL);
 	word_count = count_words(inp_str, delimiter);
 	result = (char **) malloc(sizeof(char *) * (word_count + 1));
-	if (!inp_str || !result)
+	if (!result)
 		return (NULL);
 	i = 0;
 	j = 0;
 	while (j < word_count)
 	{
 		i = get_word(inp_str, delimiter, i);
-		result[j] = ft_substr(inp_str, i, my_delimiter(inp_str, delimiter, i) - i);
+		result[j] = ft_substr(inp_str, i,
+				my_delimiter(inp_str, delimiter, i) - i);
 		if (!result[j])
 		{
 			free_split(result);

@@ -6,7 +6,7 @@
 /*   By: dmazo-ga <dmazo-ga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 18:01:30 by dmazo-ga          #+#    #+#             */
-/*   Updated: 2024/10/26 09:28:16 by dmazo-ga         ###   ########.fr       */
+/*   Updated: 2024/11/05 17:53:54 by dmazo-ga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (!s1)
 		return (NULL);
 	if (!set)
-		return (ft_strdup(s1));
+		return (NULL);
 	end = ft_strlen(s1) - 1;
 	start = 0;
 	while (s1[start] && ft_strchr(set, s1[start]))
 		++start;
-	while (s1[end] && ft_strchr(set, s1[end]))
+	while (end > start && ft_strchr(set, s1[end]))
 		--end;
 	final_str = ft_substr(s1, start, end - start + 1);
 	return (final_str);

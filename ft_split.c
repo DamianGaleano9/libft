@@ -6,7 +6,7 @@
 /*   By: dmazo-ga <dmazo-ga@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/02 10:52:41 by marvin            #+#    #+#             */
-/*   Updated: 2024/11/05 18:25:01 by dmazo-ga         ###   ########.fr       */
+/*   Updated: 2024/11/05 18:36:28 by dmazo-ga         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,7 @@ char	**ft_split(const char *inp_str, char delimiter)
 		result[j] = ft_substr(inp_str, i,
 				my_delimiter(inp_str, delimiter, i) - i);
 		if (!result[j])
-		{
-			free_split(result);
-			return (NULL);
-		}
+			return (free_split(result), NULL);
 		i = my_delimiter(inp_str, delimiter, i);
 		j++;
 	}
